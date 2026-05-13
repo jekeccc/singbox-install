@@ -17,10 +17,12 @@ MASQUERADE="https://www.bing.com"
 RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; NC='\033[0m'
 print() { echo -e "$1"; }
 
+# [span_7](start_span)检查 Root[span_7](end_span)
 check_root() { 
     [ "$(id -u)" -ne 0 ] && { print "${RED}错误: 请以 root 用户运行此脚本！${NC}"; exit 1; } 
 }
 
+# [span_8](start_span)增强型参数设置[span_8](end_span)
 interactive_settings() {
     print "${GREEN}=== 基础配置设置 ===${NC}"
     read -p "请输入域名 (留空则使用 IP + 自签名证书): " DOMAIN
@@ -43,12 +45,14 @@ interactive_settings() {
     get_port "跳跃结束端口" "$HOP_PORT_END" "HOP_PORT_END"
 }
 
+# [span_9](start_span)安装依赖[span_9](end_span)
 install_dependencies() {
     print "${GREEN}正在安装系统依赖...${NC}"
     apt update -y && apt install -y curl wget qrencode openssl jq uuid-runtime iptables-persistent || \
     yum install -y curl wget qrencode openssl jq iptables-services
 }
 
+# [span_10](start_span)[span_11](start_span)配置防火墙[span_10](end_span)[span_11](end_span)
 setup_firewall() {
     print "${GREEN}配置防火墙规则与端口跳跃...${NC}"
     iptables -t nat -F PREROUTING || true
@@ -63,6 +67,7 @@ setup_firewall() {
     fi
 }
 
+# [span_12](start_span)生成配置[span_12](end_span)
 create_config() {
     print "${GREEN}正在生成 sing-box 服务端配置...${NC}"
     mkdir -p /etc/sing-box
@@ -91,6 +96,7 @@ create_config() {
 EOF
 }
 
+# [span_13](start_span)客户端信息[span_13](end_span)
 generate_client_info() {
     print "${GREEN}=== 客户端配置信息 ===${NC}"
     local IP=$(curl -s4 ifconfig.me)
@@ -103,6 +109,7 @@ generate_client_info() {
     echo "$HY2_URI" | qrencode -t ansiutf8
 }
 
+# [span_14](start_span)菜单[span_14](end_span)
 management_menu() {
     while true; do
         print "\n${GREEN}======== sing-box 管理菜单 =======${NC}"
